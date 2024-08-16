@@ -8,6 +8,8 @@
 
   width: 100%;
   background-color: white;
+  /* height: 100vh;
+  overflow-y: auto; */
 
   .card-body-container{
     display: flex;

@@ -1,7 +1,7 @@
 import React from "react";
 import "./header.css";
 
-const Header = ({ setSearchQuery = () => {} }) => {
+const Header = ({ setSearchQuery = () => {}, cartItem = 0, setShowCart }) => {
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -72,7 +72,12 @@ const Header = ({ setSearchQuery = () => {} }) => {
             />
           </svg>{" "}
         </span>
-        <span className="login-icon">
+        <span
+          className="login-icon"
+          onClick={() => {
+            setShowCart(true);
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -87,6 +92,9 @@ const Header = ({ setSearchQuery = () => {} }) => {
           <span className="login-title">Cart</span>
         </span>
       </div>
+      {cartItem.length > 0 && (
+        <div className="cart-count">{cartItem.length}</div>
+      )}
     </header>
   );
 };

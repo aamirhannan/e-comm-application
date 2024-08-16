@@ -1,0 +1,16 @@
+.footer-container{
+    margin-top: auto;
+    width: 100%;
+    /* background-color: whitesmoke; */
+    .footer-content{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #999999;
+    }
+
+}

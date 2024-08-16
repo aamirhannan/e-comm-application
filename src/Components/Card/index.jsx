@@ -4,8 +4,22 @@ import StarRating from "../StarRating";
 
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import toast, { Toaster } from "react-hot-toast";
 
-const Card = ({ card, isLoading }) => {
+const Card = ({ card, isLoading, cartItem, setCartItem, setShowCart }) => {
+  const handleAddItemToCart = () => {
+    const tempObject = {
+      ...card,
+      quantity: 1,
+    };
+    setCartItem([...cartItem, tempObject]);
+    toast("Item added to cart successfully");
+  };
+
+  const handleMoveToCart = () => {
+    setShowCart(true);
+  };
+
   if (isLoading) {
     return (
       <>
@@ -56,7 +70,7 @@ const Card = ({ card, isLoading }) => {
             </svg>
             1100
           </span>
-          <span className="card-offer">88% off</span>
+          <span className="card-offer">{card.discount}% off</span>
         </div>
         <div className="card-ratings">
           <span
@@ -71,7 +85,21 @@ const Card = ({ card, isLoading }) => {
         </div>
       </div>
       <div className="card-btn-container">
-        <button className="add-to-cart-btn">Add to Cart</button>
+        {cartItem.some((item) => item.id === card.id) ? (
+          <button onClick={handleMoveToCart} className="add-to-cart-btn">
+            Go to cart
+          </button>
+        ) : (
+          <>
+            <button onClick={handleAddItemToCart} className="add-to-cart-btn">
+              Add to Cart
+            </button>
+            <Toaster />
+          </>
+        )}
+        {/* <button onClick={handleAddItemToCart} className="add-to-cart-btn">
+          Add to Cart
+        </button> */}
       </div>
     </div>
   );

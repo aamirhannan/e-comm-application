@@ -4,6 +4,10 @@ import Header from "./Components/Header";
 import axios from "axios";
 import StarRating from "./Components/StarRating";
 import Card from "./Components/Card";
+import Home from "./Components/Home";
+import Footer from "./Components/Footer";
+import Cart from "./Components/Cart";
+
 function App() {
   const [products, setProducts] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
@@ -13,6 +17,7 @@ function App() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const [showCart, setShowCart] = useState(false);
 
   const sortingList = [
     { label: "Price: Low to High", value: "LOWTOHIGH" },
@@ -20,6 +25,57 @@ function App() {
     { label: "Popularity", value: "POPULARITY" },
     { label: "Ratings", value: "RATINGS" },
   ];
+  const [userAddress, setUserAddress] = useState({
+    name: "",
+    phoneNo: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "",
+  });
+
+  const [cartSummary, setCartSummary] = useState({
+    totalItems: 0,
+    totalPrice: 0,
+    discountPrice: 0,
+    deliveryCharge: 0,
+    totalCost: 0,
+    prevAppliedDiscount: 0,
+  });
+
+  const [discountCouponValue, setDiscountCouponValue] = useState(null);
+
+  const updateCartSummary = () => {
+    let totalItems = 0;
+    let totalPrice = 0;
+    let totalCostBeforeDiscounts = 0;
+
+    // Calculate totals from cart items
+    cartItem.forEach((item) => {
+      totalItems += item.quantity;
+      totalPrice += item.price * item.quantity;
+      totalCostBeforeDiscounts += item.price * item.quantity;
+    });
+
+    // Generate random values for discount and delivery charge
+    const discountPrice = 33;
+    const deliveryCharge = 40;
+    setCartSummary({
+      totalItems,
+      totalPrice,
+      discountPrice,
+      deliveryCharge,
+      totalCost: Number(
+        totalCostBeforeDiscounts -
+          discountPrice +
+          deliveryCharge -
+          discountCouponValue +
+          7
+      ).toFixed(2),
+    });
+  };
 
   // Fetching data from the API on component mount
   useEffect(() => {
@@ -35,7 +91,13 @@ function App() {
         ).sort();
 
         setCategoryList(uniqueCategories);
-        setProducts(data);
+        const updateData = data.map((singleData) => ({
+          ...singleData,
+          quantity: 0,
+          totalPrice: singleData.price,
+          discount: Math.trunc(Math.random() * 100 + 1),
+        }));
+        setProducts(updateData);
         window.localStorage.setItem("products", JSON.stringify(data));
       } catch (error) {
         console.error(error);
@@ -75,8 +137,9 @@ function App() {
     setFilteredProducts(sortedProducts); // Update state with sorted products
   };
 
+  const [cartItem, setCartItem] = useState([]);
+
   useEffect(() => {
-    // Filter products based on search query
     const query = searchQuery.toLowerCase();
     const result = products.filter((product) =>
       Object.values(product).some((value) =>
@@ -87,81 +150,56 @@ function App() {
   }, [searchQuery, products]);
 
   useEffect(() => {
-    // Save filtered products to local storage
     console.log("sort", sortOrder);
   }, [sortOrder]);
 
   return (
     <div>
-      <Header setSearchQuery={setSearchQuery} />
-      <section className="body-container">
-        <div className="card-filter-section">
-        
-          <div className="category-section">
-            <span
-              onClick={() => {
-                console.log(categoryList);
-              }}
-              className="category-title"
-            >
-              Category
-            </span>{" "}
-            <span className="category-card-container">
-              {categoryList.map((category, index) => (
-                <span
-                  onClick={() => handleCategorySelection(category)}
-                  key={`category ${index}`}
-                  className={`category-card ${
-                    activeCategory === category ? "active" : ""
-                  }`}
-                >
-                  {category}
-                </span>
-              ))}
-              <span
-                onClick={() => {
-                  setActiveCategory(null);
-                  setSortOrder(null);
-                  setSearchQuery("");
-                }}
-                className="category-card"
-              >
-                Reset
-              </span>
-            </span>
-          </div>
+      <Header
+        setSearchQuery={setSearchQuery}
+        cartItem={cartItem}
+        setShowCart={setShowCart}
+      />
 
-          <div className="sort-section">
-            <span className="sort-title">Sort by:</span>
-            <span className="sort-card-container">
-              {sortingList.map((list, index) => (
-                <span
-                  key={`sort ${index}`}
-                  onClick={() => {
-                    const sortOption = list.value;
-                    handleSortChanges(sortOption);
-                  }}
-                  className={`sort-card ${
-                    sortOrder === list.value ? "active" : ""
-                  }`}
-                >
-                  {list.label}
-                </span>
-              ))}
-            </span>
-          </div>
-        </div>
-        <div className="card-body-container">
-          {isLoading ? (
-            <Card key={121} isLoading={isLoading} />
-          ) : filteredProducts.length > 0 ? (
-            filteredProducts.map((card) => <Card key={card.id} card={card} />)
-          ) : (
-            <h1>OOPs! No result found</h1>
-          )}
-        </div>
-      </section>
-      <footer></footer>
+      {showCart ? (
+        <Cart
+          setCartItem={setCartItem}
+          cartItem={cartItem}
+          userAddress={userAddress}
+          setUserAddress={setUserAddress}
+          setShowCart={setShowCart}
+          cartSummary={cartSummary}
+          setCartSummary={setCartSummary}
+          updateCartSummary={updateCartSummary}
+          discountCouponValue={discountCouponValue}
+          setDiscountCouponValue={setDiscountCouponValue}
+        />
+      ) : (
+        <Home
+          products={products}
+          setProducts={setProducts}
+          categoryList={categoryList}
+          setCategoryList={setCategoryList}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filteredProducts={filteredProducts}
+          setFilteredProducts={setFilteredProducts}
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          sortingList={sortingList}
+          handleSortChanges={handleSortChanges}
+          handleCategorySelection={handleCategorySelection}
+          setCartItem={setCartItem}
+          cartItem={cartItem}
+          setShowCart={setShowCart}
+        />
+      )}
+
+      {showCart === false && <Footer />}
     </div>
   );
 }

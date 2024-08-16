@@ -9,7 +9,8 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-
+    position: relative;
+    
     .header-right {
         display: flex;
         align-items: center;
@@ -45,6 +46,7 @@
         color: white;
         gap: 42px;
         padding-right: 32px;
+        
 
         .login-icon {
             display: flex;
@@ -52,13 +54,38 @@
             justify-content: center;
             gap: 8px;
             cursor: pointer;
+            
+            z-index: 0;
 
             .login-title {
                 font-size: 16px;
                 font-weight: 500;
                 color: white;
+                z-index: 0;
             }
         }
 
     }
+    .cart-count{
+        position: absolute;
+        width: fit-content;
+        height: fit-content;
+        padding: 4px 4px;
+        min-width: 25px;
+        min-height: 25px;
+        max-width: 50px;
+        max-height:50px ;
+        font-size: 12px;
+        font-weight: 900;
+        border-radius: 50%;
+        /* background-color: royalblue; */
+        color: yellow;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top:8%;
+        right: 5%;
+        z-index: 2;
+    }
+
 }
