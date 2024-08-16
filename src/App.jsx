@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
 import axios from "axios";
@@ -7,6 +7,7 @@ import Card from "./Components/Card";
 import Home from "./Components/Home";
 import Footer from "./Components/Footer";
 import Cart from "./Components/Cart";
+import { CartContext } from "./Components/userContext";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -18,6 +19,11 @@ function App() {
   const [activeCategory, setActiveCategory] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [showCart, setShowCart] = useState(false);
+
+  // console.log(CartContext);
+
+  const { cartItem, setCartItem, clearCartItem } = useContext(CartContext);
+  console.log(cartItem);
 
   const sortingList = [
     { label: "Price: Low to High", value: "LOWTOHIGH" },
@@ -137,7 +143,7 @@ function App() {
     setFilteredProducts(sortedProducts); // Update state with sorted products
   };
 
-  const [cartItem, setCartItem] = useState([]);
+  // const [cartItem, setCartItem] = useState([]);
 
   useEffect(() => {
     const query = searchQuery.toLowerCase();
