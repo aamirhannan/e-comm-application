@@ -21,6 +21,7 @@
         .header-logo {
             width: 120px;
             height: 32px;
+            cursor: pointer;
 
         }
 

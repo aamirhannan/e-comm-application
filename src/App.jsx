@@ -8,6 +8,8 @@ import Home from "./Components/Home";
 import Footer from "./Components/Footer";
 import Cart from "./Components/Cart";
 import { CartContext } from "./Components/userContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./Components/Login";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -31,58 +33,6 @@ function App() {
     { label: "Popularity", value: "POPULARITY" },
     { label: "Ratings", value: "RATINGS" },
   ];
-  const [userAddress, setUserAddress] = useState({
-    name: "",
-    phoneNo: "",
-    email: "",
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "",
-  });
-
-  const [cartSummary, setCartSummary] = useState({
-    totalItems: 0,
-    totalPrice: 0,
-    discountPrice: 0,
-    deliveryCharge: 0,
-    totalCost: 0,
-    prevAppliedDiscount: 0,
-  });
-
-  const [discountCouponValue, setDiscountCouponValue] = useState(null);
-
-  const updateCartSummary = () => {
-    let totalItems = 0;
-    let totalPrice = 0;
-    let totalCostBeforeDiscounts = 0;
-
-    // Calculate totals from cart items
-    cartItem.forEach((item) => {
-      totalItems += item.quantity;
-      totalPrice += item.price * item.quantity;
-      totalCostBeforeDiscounts += item.price * item.quantity;
-    });
-
-    // Generate random values for discount and delivery charge
-    const discountPrice = 33;
-    const deliveryCharge = 40;
-    setCartSummary({
-      totalItems,
-      totalPrice,
-      discountPrice,
-      deliveryCharge,
-      totalCost: Number(
-        totalCostBeforeDiscounts -
-          discountPrice +
-          deliveryCharge -
-          discountCouponValue +
-          7
-      ).toFixed(2),
-    });
-  };
-
   // Fetching data from the API on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -140,10 +90,8 @@ function App() {
         console.log("Unknown sort option");
     }
 
-    setFilteredProducts(sortedProducts); // Update state with sorted products
+    setFilteredProducts(sortedProducts);
   };
-
-  // const [cartItem, setCartItem] = useState([]);
 
   useEffect(() => {
     const query = searchQuery.toLowerCase();
@@ -161,51 +109,47 @@ function App() {
 
   return (
     <div>
-      <Header
-        setSearchQuery={setSearchQuery}
-        cartItem={cartItem}
-        setShowCart={setShowCart}
-      />
-
-      {showCart ? (
-        <Cart
-          setCartItem={setCartItem}
-          cartItem={cartItem}
-          userAddress={userAddress}
-          setUserAddress={setUserAddress}
-          setShowCart={setShowCart}
-          cartSummary={cartSummary}
-          setCartSummary={setCartSummary}
-          updateCartSummary={updateCartSummary}
-          discountCouponValue={discountCouponValue}
-          setDiscountCouponValue={setDiscountCouponValue}
-        />
-      ) : (
-        <Home
-          products={products}
-          setProducts={setProducts}
-          categoryList={categoryList}
-          setCategoryList={setCategoryList}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          searchQuery={searchQuery}
+      <BrowserRouter>
+        <Header
           setSearchQuery={setSearchQuery}
-          filteredProducts={filteredProducts}
-          setFilteredProducts={setFilteredProducts}
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-          sortOrder={sortOrder}
-          setSortOrder={setSortOrder}
-          sortingList={sortingList}
-          handleSortChanges={handleSortChanges}
-          handleCategorySelection={handleCategorySelection}
-          setCartItem={setCartItem}
           cartItem={cartItem}
           setShowCart={setShowCart}
         />
-      )}
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+              <Home
+                products={products}
+                setProducts={setProducts}
+                categoryList={categoryList}
+                setCategoryList={setCategoryList}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                filteredProducts={filteredProducts}
+                setFilteredProducts={setFilteredProducts}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                sortingList={sortingList}
+                handleSortChanges={handleSortChanges}
+                handleCategorySelection={handleCategorySelection}
+                setCartItem={setCartItem}
+                cartItem={cartItem}
+                setShowCart={setShowCart}
+              />
+            }
+          />
 
-      {showCart === false && <Footer />}
+          <Route exact path="/cart" element={<Cart />} />
+          <Route exact path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+      <Footer />
     </div>
   );
 }

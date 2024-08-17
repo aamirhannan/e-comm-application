@@ -169,8 +169,16 @@ box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px
            border-radius: 8px;
            background-color: #2874f0;
            transition: transform 0.5s ease-in-out;
+           
+           &.item-in-cart{
+            transform: scale(0.95);
+            background-color: #236ae2;
+            color: white;
+            cursor: default;
+ 
+           }
 
-           &:hover{
+           &:hover{ 
             transform: scale(0.95);
             background-color: 236ae2;
            }

@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./header.css";
-
+import { useNavigate } from "react-router-dom";
+import { Toolbar, Tooltip } from "@mui/material";
+import { CartContext } from "../userContext";
 const Header = ({ setSearchQuery = () => {}, cartItem = 0, setShowCart }) => {
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
   };
+  const { user } = useContext(CartContext);
+  console.log(user);
 
+  const navigate = useNavigate();
   return (
     <header className="header">
       <div className="header-right">
-        <span className="header-logo">
+        <span
+          className="header-logo"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <img
             className="header-logo"
             src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
@@ -24,58 +34,69 @@ const Header = ({ setSearchQuery = () => {}, cartItem = 0, setShowCart }) => {
         />
       </div>
       <div className="header-left">
-        <span className="login-icon">
-          <span className="login-title">Login</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-chevron-down"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
-            />
-          </svg>{" "}
-        </span>
-        <span className="login-icon">
-          <span className="login-title">Become a seller</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-chevron-down"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
-            />
-          </svg>{" "}
-        </span>
-        <span className="login-icon">
-          <span className="login-title">More</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-chevron-down"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
-            />
-          </svg>{" "}
-        </span>
         <span
           className="login-icon"
           onClick={() => {
-            setShowCart(true);
+            navigate("/login");
+          }}
+        >
+          <span className="login-title">
+            {user.isLoggedIn ? user.name : "Login"}
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-chevron-down"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+            />
+          </svg>{" "}
+        </span>
+        <Tooltip title="Coming Soon" placement="right-end" arrow>
+          <span className="login-icon">
+            <span className="login-title">Become a seller</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-chevron-down"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+              />
+            </svg>{" "}
+          </span>
+        </Tooltip>
+        <Tooltip title="Coming Soon" placement="right-end" arrow>
+          <span className="login-icon">
+            <span className="login-title">More</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-chevron-down"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+              />
+            </svg>{" "}
+          </span>
+        </Tooltip>
+        <span
+          className="login-icon"
+          onClick={() => {
+            navigate("/cart");
           }}
         >
           <svg
@@ -93,7 +114,14 @@ const Header = ({ setSearchQuery = () => {}, cartItem = 0, setShowCart }) => {
         </span>
       </div>
       {cartItem.length > 0 && (
-        <div className="cart-count">{cartItem.length}</div>
+        <div
+          onClick={() => {
+            navigate("/cart");
+          }}
+          className="cart-count"
+        >
+          {cartItem.length}
+        </div>
       )}
     </header>
   );

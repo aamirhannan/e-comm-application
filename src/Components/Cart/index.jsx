@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./cart.css";
 import PlaceOrderModal from "../PlaceOrderModal";
-import toast, { Toaster } from "react-hot-toast";
-
-const Cart = ({
-  setCartItem,
-  cartItem,
-  userAddress,
-  setUserAddress,
-  setShowCart,
-  cartSummary,
-  setCartSummary,
-  updateCartSummary,
-  discountCouponValue,
-  setDiscountCouponValue,
-}) => {
+import { useNavigate } from "react-router-dom";
+import { CartContext } from "../userContext";
+const Cart = () => {
+  const {
+    cartSummary,
+    setCartSummary,
+    resetCartSummary,
+    updateCartSummary,
+    discountCouponValue,
+    setDiscountCouponValue,
+    setCartItem,
+    cartItem,
+  } = useContext(CartContext);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const navigate = useNavigate();
+
   const handleDecrementQuantity = (item) => {
     if (item.quantity <= 1) {
-      toast("Minimum 1 item required");
       return;
     }
     setCartItem((prev) =>
@@ -39,7 +39,6 @@ const Cart = ({
 
   const handleIncrementQuantity = (item) => {
     if (item.quantity >= 8) {
-      toast("Maximum 8 item allowed");
       return;
     }
     setCartItem((prev) =>
@@ -60,7 +59,8 @@ const Cart = ({
   };
 
   const handleMoveToHome = (item) => {
-    setShowCart(false);
+    // setShowCart(false);
+    navigate("/");
   };
 
   const discountCoupon = [
@@ -114,6 +114,7 @@ const Cart = ({
             setOpen={setOpen}
             handleClose={handleClose}
             handleOpen={handleOpen}
+            resetCartSummary={resetCartSummary}
           />
 
           <div className="place-order-section">
@@ -131,7 +132,7 @@ const Cart = ({
             <div className="cart-total-title">Cart Summary</div>
             <div className="cart-total-price">
               <div>Price</div>
-              <div>{cartSummary.totalPrice}</div>
+              <div>{cartSummary.totalPrice.toFixed(2)}</div>
             </div>
             <div className="cart-total-price">
               <div>Discount</div>
@@ -139,7 +140,7 @@ const Cart = ({
             </div>
             <div className="cart-total-price">
               <div>Platform fee</div>
-              <div>7</div>
+              <div>{cartSummary.platformfee}</div>
             </div>
             <div className="cart-total-price">
               <div>Delivery Charge</div>
@@ -182,6 +183,7 @@ export default Cart;
 
 const CartList = ({
   cartItem,
+  resetCartSummary,
   handleItemRemoveFromCart,
   handleIncrementQuantity,
   handleDecrementQuantity,
@@ -190,6 +192,11 @@ const CartList = ({
   handleOpen,
   handleClose,
 }) => {
+  useEffect(() => {
+    if (cartItem.length === 0) {
+      resetCartSummary();
+    }
+  }, [cartItem]);
   return (
     <>
       {cartItem.length === 0 ? (
@@ -253,7 +260,7 @@ const CartList = ({
                   >
                     -
                   </div>
-                  <Toaster />
+
                   <input
                     className="quantity"
                     type="text"
@@ -266,7 +273,6 @@ const CartList = ({
                   >
                     +
                   </div>
-                  <Toaster />
                 </div>
                 <div
                   className="remove-item-btn"

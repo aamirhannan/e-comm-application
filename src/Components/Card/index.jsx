@@ -4,20 +4,23 @@ import StarRating from "../StarRating";
 
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Card = ({ card, isLoading, cartItem, setCartItem, setShowCart }) => {
+  const navigate = useNavigate();
   const handleAddItemToCart = () => {
+    // toast("Item added to cart successfully");
     const tempObject = {
       ...card,
       quantity: 1,
     };
     setCartItem([...cartItem, tempObject]);
-    toast("Item added to cart successfully");
   };
 
   const handleMoveToCart = () => {
-    setShowCart(true);
+    navigate("/cart");
   };
 
   if (isLoading) {
@@ -86,20 +89,23 @@ const Card = ({ card, isLoading, cartItem, setCartItem, setShowCart }) => {
       </div>
       <div className="card-btn-container">
         {cartItem.some((item) => item.id === card.id) ? (
-          <button onClick={handleMoveToCart} className="add-to-cart-btn">
-            Go to cart
-          </button>
+          <div>
+            <button
+              onClick={handleMoveToCart}
+              className="add-to-cart-btn item-in-cart"
+            >
+              Go to cart
+            </button>
+            <ToastContainer />
+          </div>
         ) : (
-          <>
+          <div>
             <button onClick={handleAddItemToCart} className="add-to-cart-btn">
               Add to Cart
             </button>
-            <Toaster />
-          </>
+            <ToastContainer />
+          </div>
         )}
-        {/* <button onClick={handleAddItemToCart} className="add-to-cart-btn">
-          Add to Cart
-        </button> */}
       </div>
     </div>
   );
