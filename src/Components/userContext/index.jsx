@@ -43,10 +43,10 @@ const CartProvider = ({ children }) => {
           isLoggedIn: false,
           password: "",
           address: {
-            street: "",
-            city: "",
-            state: "",
-            zipCode: "",
+            street: "Enclave",
+            city: "New Delhi",
+            state: "Delhi",
+            zipCode: "110025",
           },
         };
   });
@@ -78,10 +78,10 @@ const CartProvider = ({ children }) => {
       email: "",
       isLoggedIn: false,
       address: {
-        street: "",
-        city: "",
-        state: "",
-        zipCode: "",
+        street: "Enclave",
+        city: "New Delhi",
+        state: "Delhi",
+        zipCode: "110025",
       },
     });
 

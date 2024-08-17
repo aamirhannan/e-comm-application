@@ -13,9 +13,25 @@ const Cart = () => {
     setDiscountCouponValue,
     setCartItem,
     cartItem,
+    user,
+    clearCartItem,
   } = useContext(CartContext);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if (user.isLoggedIn && cartItem.length > 0) {
+      resetCartSummary();
+      clearCartItem();
+      setOpen(true);
+      setTimeout(() => {
+        setOpen(false);
+        navigate("/");
+      }, 2000);
+    } else if (user.isLoggedIn && cartItem.length === 0) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
   const handleClose = () => setOpen(false);
 
   const navigate = useNavigate();
@@ -73,6 +89,10 @@ const Cart = () => {
     setDiscountCouponValue(Number(e.target.value));
   };
 
+  const handleChangeAddress = () => {
+    navigate("/address");
+  };
+
   useEffect(() => {
     updateCartSummary();
   }, [cartItem, discountCouponValue]);
@@ -97,12 +117,20 @@ const Cart = () => {
               <div className="address-top-row">
                 Deliver to:{" "}
                 <span className="user-name">
-                  {"Aamir"} {"842001"}
+                  {user.name} {user.address.zipCode}
                 </span>{" "}
               </div>
-              <div className="address-bottom-row">{"305, Hussain Mansion"}</div>
+              <div className="address-bottom-row">
+                `{user.address.street} {user.address.city} {user.address.state}{" "}
+                `{" "}
+              </div>
             </div>
-            <button className="address-change-btn">Change Address</button>
+            <button
+              onClick={handleChangeAddress}
+              className="address-change-btn"
+            >
+              Change Address
+            </button>
           </div>
 
           <CartList
@@ -164,7 +192,6 @@ const Cart = () => {
                   </option>
                 ))}
               </select>
-              {/* <button className="apply-coupon-btn">Apply</button> */}
             </div>
             <div className="cart-total-price">
               <div>Total</div>

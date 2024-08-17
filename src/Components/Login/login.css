@@ -1,6 +1,7 @@
 .login-outer-container{
     width: 100%;
-    height: calc(100vh - 200px);
+    /* height: calc(100vh - 200px); */
+    height: 100vh;
     /* padding: 50px; */
     /* border: 1px solid lightgray; */
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -31,6 +32,7 @@
                 align-items: center;
                 justify-content: center;
                 text-align: center;
+                
                 padding-top: 24px;
             }
 
@@ -49,7 +51,10 @@
                         background-color: #2874f0;
                     }
             }
-
+            
+            .address-container{
+                width: 100%;
+            }
             .form-inner-container{
                 width: 100%;
                 display: flex;

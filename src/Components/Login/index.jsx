@@ -2,7 +2,9 @@ import React, { useContext, useState } from "react";
 import "./login.css";
 import { CartContext } from "../userContext";
 import { CleaningServices, Email, Password } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
   const { user, setUser, userLogOut } = useContext(CartContext);
 
   const [userData, setUserData] = useState({
@@ -27,9 +29,10 @@ const Login = () => {
 
   const handleSubmit = () => {
     const isValid = validateUserData();
-    console.log(isValid);
+    console.log("30", isValid);
     if (isValid.isEmpty === true) {
       setUser({
+        ...user,
         isLoggedIn: true,
         name: userData.name,
         email: userData.email,
@@ -64,18 +67,18 @@ const Login = () => {
     };
     if (!userData.name || userData.name.trim().length < 3) {
       errors.name = "Minimum 3 characters required.";
-      error.isEmpty = false;
+      errors.isEmpty = false;
     }
 
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     if (!userData.email || !emailRegex.test(userData.email)) {
       errors.email = "Enter valid email address.";
-      error.isEmpty = false;
+      errors.isEmpty = false;
     }
 
     if (!userData.password || userData.password.length < 8) {
       errors.password = "Minimum 8 characters required.";
-      error.isEmpty = false;
+      errors.isEmpty = false;
     }
 
     return errors;
@@ -102,6 +105,17 @@ const Login = () => {
                 }}
               >
                 Logout
+              </button>
+
+              <button
+                style={{ marginTop: "10px" }}
+                className="logout-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/");
+                }}
+              >
+                Continue Shopping
               </button>
             </>
           ) : (

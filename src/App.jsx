@@ -10,6 +10,7 @@ import Cart from "./Components/Cart";
 import { CartContext } from "./Components/userContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./Components/Login";
+import UserAddress from "./Components/Login/userAddress";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -147,6 +148,7 @@ function App() {
 
           <Route exact path="/cart" element={<Cart />} />
           <Route exact path="/login" element={<Login />} />
+          <Route exact path="/address" element={<UserAddress />} />
         </Routes>
       </BrowserRouter>
       <Footer />
