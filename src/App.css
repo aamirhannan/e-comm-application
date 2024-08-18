@@ -4,6 +4,12 @@
 }
 
 
+@media screen and (max-width: 500px) {
+  .card-filter-section{
+    display: none !important;
+  }
+}
+
 .body-container{
 
   width: 100%;
